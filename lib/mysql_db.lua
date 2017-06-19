@@ -4,8 +4,17 @@ local ipairs = ipairs
 local setmetatable = setmetatable
 local ngx_quote_sql_str = ngx.quote_sql_str
 local mysql = require("resty.mysql")
-local utils = require("utils")
 
+
+local function table_is_array(t)
+    if type(t) ~= "table" then return false end
+    local i = 0
+    for _ in pairs(t) do
+        i = i + 1
+        if t[i] == nil then return false end
+    end
+    return true
+end
 
 local DB = {}
 
@@ -103,7 +112,7 @@ local function compose(t, params)
 end
 
 function DB:parse_sql(sql, params)
-    if not params or not utils.table_is_array(params) or #params == 0 then
+    if not params or not table_is_array(params) or #params == 0 then
         return sql
     end
 

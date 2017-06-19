@@ -82,22 +82,20 @@ end
 local function select_mysql(key)
     local db = mysql:new(config.mysql)
     local sql = "SELECT `c_value` FROM `t_shorturl` WHERE `c_key` = ? LIMIT 1"
-    local res, err = db:select(sql, {key})
+    local res, err, errno, sqlstate = db:select(sql, {key})
     if not res or err then
         ngx.log(ngx.ERR, "mysql select faild: " .. tostring(err))
-    end
-
-    if res and res[1] then
+        return nil
+    elseif res[1] then
         return res[1].c_value
     end
-    return nil
 end
 
 
 function set_redis(key, value)
     local red = redis:new(config.redis)
     local res, err = red:set(key, value)
-    ngx.log(ngx.DEBUG, 'redis set key'.. key .. ':' .. tostring(res))
+    ngx.log(ngx.DEBUG, 'redis set key '.. key .. ':' .. tostring(res))
     if not res then
         ngx.log(ngx.ERR, "reids connection error")
     end
