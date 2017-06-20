@@ -95,7 +95,11 @@ end
 -- change connect address as you need
 function _M.connect_mod( self, redis )    
     redis:set_timeout(self.timeout)
-    return redis:connect(self.host, self.port)
+    local ok, err = redis:connect(self.host, self.port)
+    if not ok then
+        return ok, err
+    end
+    return redis:select(self.db_index)
 end
 
 
@@ -200,11 +204,6 @@ local function do_command(self, cmd, ... )
     end
 
     local ok, err = self:connect_mod(redis)
-    if not ok or err then
-        return nil, err
-    end
-
-    local ok, err = redis:select(self.db_index)
     if not ok or err then
         return nil, err
     end
