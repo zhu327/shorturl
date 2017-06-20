@@ -204,7 +204,10 @@ local function do_command(self, cmd, ... )
         return nil, err
     end
 
-    redis:select(self.db_index)
+    local ok, err = redis:select(self.db_index)
+    if not ok or err then
+        return nil, err
+    end
 
     local fun = redis[cmd]
     local result, err = fun(redis, ...)
