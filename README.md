@@ -1,6 +1,5 @@
 ## OpenResty shorturl
 
----
 
 基于OpenResty实现的短网址生成服务
 
