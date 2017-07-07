@@ -1,5 +1,5 @@
 local fmod = math.fmod
-local modf = math.modf
+local floor = math.floor
 local sub = string.sub
 local redis = require("redis_db")
 local mysql = require("mysql_db")
@@ -11,14 +11,13 @@ local function convert_to_code(num)
     local codes = "QKV4hy7YaBMgWUzFAJLpPudeoGHnOi0m6xItDj2cRE8Cwq1s9rblXTSkvN3f5Z"
     local length = string.len(codes)
     local str = ''
-    while num > length do
-        local index = fmod(num, length)
-        local char = sub(codes, index+1, index+1)
+    local index, char
+    while num > 0 do
+        index = fmod(num, length) + 1
+        char = sub(codes, index, index)
         str = char .. str
-        num = modf(num / length)
+        num = floor(num / length)
     end
-    local char = sub(codes, num+1, num+1)
-    str = char .. str
     return str
 end
 
@@ -48,7 +47,7 @@ function _M:init_index()
     local red = redis:new(config.redis)
     local res, err = red:get(index_key)
     if res == nil then
-        res, err = red:set(index_key, 56800235584)
+        res, err = red:set(index_key, 14776336)
         ngx.log(ngx.DEBUG, 'redis set value ' .. tostring(res))
         if not res then
             ngx.log(ngx.ERR, "reids connection error")
