@@ -1,6 +1,6 @@
 CREATE TABLE `t_shorturl` (
   `c_id` int(11) NOT NULL AUTO_INCREMENT,
-  `c_key` varchar(10) NOT NULL,
+  `c_key` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   `c_value` varchar(1000) NOT NULL,
   `c_remark` varchar(50) NOT NULL DEFAULT '',
   `c_add_dt` datetime NOT NULL,
