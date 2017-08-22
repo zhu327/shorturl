@@ -99,6 +99,15 @@ function _M.connect_mod( self, redis )
     if not ok then
         return ok, err
     end
+    if self.password then
+        local count, err = redis:get_reused_times()
+        if 0 == count then
+            ok, err = redis:auth(self.password)
+            if not ok then
+                return ok, err
+            end
+        end
+    end
     return redis:select(self.db_index)
 end
 
@@ -231,6 +240,7 @@ function _M.new(self, opts)
     local db_index= opts.db_index or 0
     local host = opts.host or '127.0.0.1'
     local port = opts.port or 6379
+    local password = opts.password or nil
 
     for i = 1, #commands do
         local cmd = commands[i]
@@ -244,7 +254,8 @@ function _M.new(self, opts)
             timeout = timeout, 
             db_index = db_index, 
             host = host, 
-            port = port, 
+            port = port,
+            password = password, 
             _reqs = nil }, mt)
 end
 

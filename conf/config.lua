@@ -3,7 +3,8 @@ return {
         host = "127.0.0.1",
         port = 6379,
         timeout = 1, -- 1 second
-        db_index = 0
+        db_index = 0,
+        password = nil
     },
     mysql = {
         timeout = 5000,
