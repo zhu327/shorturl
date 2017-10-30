@@ -42,7 +42,11 @@ function DB:exec(sql)
 
     ngx.log(ngx.INFO, "connected to mysql, reused_times:", db:get_reused_times(), " sql:", sql)
 
-    db:query("SET NAMES utf8")
+    local times, err = db:get_reused_times()
+    if times == 0 then
+        db:query("SET NAMES utf8")
+    end
+
     local res, err, errno, sqlstate = db:query(sql)
     if not res or err then
         ngx.log(ngx.ERR, "bad result: ", err, ": ", errno, ": ", sqlstate, ".")
